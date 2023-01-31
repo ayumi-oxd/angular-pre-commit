@@ -1,27 +1,63 @@
-# Angular
+# Angular with pre-commit hooks
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.3.
 
-## Development server
+## Setup husky pre-commit hooks
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+1. Install [husky](https://typicode.github.io/husky) and [lint-staged](https://github.com/okonet/lint-staged)
+```
+yarn add -D husky lint-staged
+```
 
-## Code scaffolding
+2. Setup husky
+```
+npx husky-init
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+3. Go to `.husky/pre-commit` and edit the file:
+```
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-## Build
+# npm test
+npm run lint-staged
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+4. Go to `package.json` and edit the file:
+```
+"scripts": {
+    "lint-staged": "lint-staged"
+},
+```
+```
+"husky": {
+    "hooks": {
+        "pre-commit": "lint-staged",
+        "pre-push": "npm run lint"
+    }
+},
+"lint-staged": {
+    "**/*.{tsx,ts}": [
+        "prettier --write",
+        "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+    ]
+}
+```
 
-## Running unit tests
+## Usage
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1. Stage your un-committed files
+```
+git add .
+```
 
-## Running end-to-end tests
+2. Commit your change
+```
+git commit -m <commit message>
+```
+`lint-stage` will run to lint the files. If there is any linting issue, it will not proceed to commit the files, else, the staged files will be formatted automatically and committed.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+3. Push your changes to repo
+```
+git push
+```
