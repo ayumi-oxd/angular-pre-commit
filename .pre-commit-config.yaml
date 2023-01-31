@@ -1,0 +1,17 @@
+repos:
+-   repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.10.0
+    hooks:
+    -   id: eslint
+        args: ["--rule", "import/no-unresolved: 0", "--fix"]
+        additional_dependencies:
+        -   eslint@8.33.0
+        -   eslint-config-airbnb-base@15.0.0
+        -   eslint-config-airbnb-typescript@17.0.0
+        -   eslint-plugin-import@2.27.5
+        -   eslint-import-resolver-typescript@3.5.3
+        -   eslint-plugin-angular@4.1.0
+        -   eslint-plugin-angular-file-naming@1.0.6
+        stages: [commit]
+        types: [file]
+        files: \.(ts|tsx)$
